@@ -5,7 +5,7 @@
   <title></title>
 </head>
 <body>
-  <form name="form" method="POST" onsubmit="return formSubmit()">
+  <form name="form" method="POST" onsubmit="formSubmit()">
     발행번호: <input type="text" id="publishno"><br>
     패스워드: <input type="password" id="password"><br>
     <input type="submit" value="확인">
@@ -16,11 +16,9 @@
       var password = document.getElementById("password");
       if (!publishno.value || !password.value) {
         alert('발행번호 및 패스워드가 비었습니다.');
-        return false;
+        return;
       }
       window.top.location.href = "dodollink://launcher/store/fortest?publishno=" + publishno.value + "&passwd=" + password.value;
-
-      return true;
     }
   </script>
 </body>
