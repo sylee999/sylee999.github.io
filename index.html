@@ -18,28 +18,49 @@
   </head>
   <body>
     <textarea id="source">
-
-class: center, middle
-
-# Title
-
----
-
-# Agenda
-
-1. Introduction
-2. Deep-dive
-3. ...
-
----
-
-# Introduction
-
     </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js">
     </script>
     <script>
       var slideshow = remark.create();
+
+      var getParameters = function (paramName) {
+          // 리턴값을 위한 변수 선언
+          var returnValue;
+
+          // 현재 URL 가져오기
+          var url = location.href;
+
+          // get 파라미터 값을 가져올 수 있는 ? 를 기점으로 slice 한 후 split 으로 나눔
+          var parameters = (url.slice(url.indexOf('?') + 1, url.length)).split('&');
+
+          // 나누어진 값의 비교를 통해 paramName 으로 요청된 데이터의 값만 return
+          for (var i = 0; i < parameters.length; i++) {
+              var varName = parameters[i].split('=')[0];
+              if (varName.toUpperCase() == paramName.toUpperCase()) {
+                  returnValue = parameters[i].split('=')[1];
+                  return decodeURIComponent(returnValue);
+              }
+          }
+      };
+
+      var mdUrl = getParameters("url");
+
+      fetch(mdUrl)
+          .then(function (response) {
+              var contentType = response.headers.get("content-type");
+              if(contentType && contentType.indexOf("text/plain") !== -1) {
+                  return response.text();
+              } else {
+                  console.log("Oops, we haven't got MD plain text!");
+              }
+          })
+          .then(function (text) {
+              // 템플릿 내에 MD 본문을 주입한다.
+              console.log(text);
+              // class: center, middle
+              document.getElementById("source").innerText = text;
+          });
     </script>
   </body>
 </html>
